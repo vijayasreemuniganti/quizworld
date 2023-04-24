@@ -1,0 +1,22 @@
+steps:
+  - id: 'build'
+    name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/helloworld:latest'
+      - '.'
+  - id: 'publish'
+    name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/helloworld:latest'
+  - id: 'create-attestation'
+    name: 'gcr.io/$PROJECT_ID/binauthz-attestation:latest'
+    args:
+      - '--artifact-url'
+      - 'gcr.io/$PROJECT_ID/helloworld:latest'
+      - '--attestor'
+      - 'projects/projectvision-tj/attestors/test-attestor1'
+      - '--keyversion'
+      - 'projects/projectvision-tj/locations/us-central1/keyRings/test-key/cryptoKeys/bin1/cryptoKeyVersions/1'
